@@ -1,0 +1,635 @@
+:root {
+  /* Premium Dark Tech & Municipal Palette */
+  --bg: #090e17;
+  --card: #111827;
+  --card-hover: #162032;
+  --ink: #f3f4f6;
+  --mute: #9ca3af;
+  --line: #1f293d;
+  
+  --pri: #6366f1;
+  --pri-hover: #818cf8;
+  --pri-light: rgba(99, 102, 241, 0.12);
+  
+  --acc: #10b981;
+  --acc-light: rgba(16, 185, 129, 0.12);
+  
+  --bad: #f43f5e;
+  --bad-light: rgba(244, 63, 94, 0.12);
+  
+  --side: #060911;
+  --side-nav: #8a99ad;
+  --side-nav-active: #ffffff;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 20px -4px rgba(0, 0, 0, 0.5);
+  --radius: 14px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --card-hover: #fafbfc;
+    --ink: #0f172a;
+    --mute: #64748b;
+    --line: #e2e8f0;
+    
+    --pri: #4f46e5;
+    --pri-hover: #4338ca;
+    --pri-light: #eef2ff;
+    
+    --acc: #059669;
+    --acc-light: #ecfdf5;
+    
+    --bad: #e11d48;
+    --bad-light: #fff1f2;
+    
+    --side: #0f172a;
+    --side-nav: #94a3b8;
+    --side-nav-active: #ffffff;
+    
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  font: 14px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  display: flex;
+  min-height: 100vh;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- Sidebar Navigation ---------- */
+.side {
+  width: 270px;
+  background: var(--side);
+  color: var(--side-nav);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+  z-index: 10;
+}
+
+.brand {
+  padding: 30px 24px 20px;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand small {
+  font-weight: 600;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--pri-light);
+  color: var(--pri);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+nav {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+nav a {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  color: var(--side-nav);
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+nav a small {
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.7;
+  margin-top: 3px;
+}
+
+nav a:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  transform: translateX(2px);
+}
+
+nav a.on {
+  background: var(--pri-light);
+  color: var(--side-nav-active);
+  box-shadow: inset 3px 0 0 var(--pri);
+}
+
+/* ---------- Main Layout ---------- */
+main {
+  flex: 1;
+  padding: 40px 48px;
+  min-width: 0;
+  max-width: 1440px;
+}
+
+.view {
+  display: none;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.view.on {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Typography & Headings ---------- */
+h1 {
+  margin: 0 0 28px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+h3 {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+h4 {
+  margin: 22px 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mute);
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--pri-light);
+  color: var(--pri);
+  border-radius: 20px;
+  padding: 4px 12px;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Cards & Layout Grids ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s ease;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+a.card.link {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+a.card.link::after {
+  content: "→";
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 16px;
+  color: var(--mute);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+a.card.link:hover {
+  border-color: var(--pri);
+  background: var(--card-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+a.card.link:hover::after {
+  transform: translateX(4px);
+  color: var(--pri);
+}
+
+a.card.link p {
+  margin: 8px 0 0;
+  color: var(--mute);
+  font-size: 13px;
+}
+
+/* ---------- Form Controls ---------- */
+label {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+label.inline {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 10px 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+input, select, textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13.5px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--pri);
+  background: var(--card);
+  box-shadow: 0 0 0 3px var(--pri-light);
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--pri);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+textarea {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  resize: vertical;
+}
+
+fieldset {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin: 18px 0;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+legend {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mute);
+  padding: 0 8px;
+}
+
+/* ---------- Action Buttons ---------- */
+button {
+  background: var(--pri);
+  color: #ffffff;
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 20px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+button:hover {
+  background: var(--pri-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button.alt {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+button.alt:hover {
+  background: var(--card-hover);
+  border-color: var(--mute);
+  box-shadow: var(--shadow-sm);
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.row label {
+  flex: 1;
+  min-width: 120px;
+  margin: 0;
+}
+
+/* ---------- Data Tables ---------- */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13.5px;
+  margin-top: 8px;
+}
+
+th, td {
+  text-align: left;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  color: var(--mute);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+th:first-child { border-top-left-radius: 10px; }
+th:last-child { border-top-right-radius: 10px; }
+
+tbody tr {
+  transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+  background: var(--card-hover);
+}
+
+tbody tr.sel {
+  background: var(--pri-light) !important;
+}
+
+tbody tr[data-id] {
+  cursor: pointer;
+}
+
+/* ---------- Code & Result Displays ---------- */
+pre, .result {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px;
+  font: 12.5px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--ink);
+}
+
+.result {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.ok {
+  color: var(--acc);
+  font-weight: 600;
+  background: var(--acc-light);
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ok::before {
+  content: "✔";
+  font-size: 11px;
+}
+
+.bad {
+  color: var(--bad);
+  font-weight: 600;
+  background: var(--bad-light);
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bad::before {
+  content: "⚠";
+  font-size: 11px;
+}
+
+/* ---------- Lists & Details ---------- */
+ul.plain, ol.plain {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.plain li {
+  margin: 8px 0;
+  font-size: 13.5px;
+}
+
+.hint, .note {
+  color: var(--mute);
+  font-size: 13px;
+  margin-top: 16px;
+}
+
+details {
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  font-size: 13.5px;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+}
+
+details[open] {
+  border-style: solid;
+  border-color: var(--pri);
+  box-shadow: var(--shadow-sm);
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--mute);
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+summary:hover {
+  color: var(--pri);
+}
+
+/* ---------- Tree Component (Part B) ---------- */
+.tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 24px;
+}
+
+.tree > ul {
+  padding-left: 0;
+}
+
+.tree li {
+  margin: 6px 0;
+}
+
+.tree .n {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.tree .n:hover {
+  background: var(--card-hover);
+}
+
+.tree .n.sel {
+  background: var(--pri);
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.tree .off {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+.tree .t {
+  cursor: pointer;
+  color: var(--mute);
+  margin-right: 6px;
+  font-size: 13px;
+  user-select: none;
+}
+
+/* ---------- Stats Cards (Part D) ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.stats div {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 12px;
+  color: var(--mute);
+}
+
+.stats b {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 6px;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Responsive Viewports ---------- */
+@media (max-width: 900px) {
+  body {
+    flex-direction: column;
+  }
+  
+  .side {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+  
+  nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 12px 16px;
+  }
+  
+  nav small {
+    display: none;
+  }
+  
+  nav a {
+    white-space: nowrap;
+  }
+  
+  main {
+    padding: 28px 20px;
+  }
+}

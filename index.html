@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SmartCity360 – Design Patterns Dashboard</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<aside class="side">
+  <div class="brand">SmartCity360<small>OODP II</small></div>
+  <nav id="nav">
+    <a href="#home">🌐 Overview</a>
+    <a href="#a">⚡ Energy Streams<small>Decorator Pattern</small></a>
+    <a href="#b">🏙️ City Zones<small>Composite Pattern</small></a>
+    <a href="#c">📋 Complaints<small>Chain of Responsibility</small></a>
+    <a href="#d">💡 Street Lights<small>Flyweight Pattern</small></a>
+    <a href="#e">📜 City Policies<small>Interpreter Pattern</small></a>
+  </nav>
+</aside>
+
+<main>
+<!-- OVERVIEW -->
+<section class="view" id="home">
+  <h1>Dashboard</h1>
+  <div class="cards">
+    <a class="card link" href="#a"><h3>A · Energy Streams</h3><p>Stack security layers on meter data.</p></a>
+    <a class="card link" href="#b"><h3>B · City Zones</h3><p>Run commands at any level of the city tree.</p></a>
+    <a class="card link" href="#c"><h3>C · Complaints</h3><p>Submit and escalate resident complaints.</p></a>
+    <a class="card link" href="#d"><h3>D · Street Lights</h3><p>Shared light types, many light instances.</p></a>
+    <a class="card link" href="#e"><h3>E · City Policies</h3><p>Write and evaluate rules in the DSL.</p></a>
+  </div>
+  <p class="note">Baseline UI with mock data in <code>app.js</code>. Every screen has a “Data requirements” panel to guide the API design.</p>
+</section>
+
+<!-- A -->
+<section class="view" id="a">
+  <h1>Energy Streams <span class="tag">Decorator</span></h1>
+  <div class="cols">
+    <div class="card">
+      <h3>Configure stream</h3>
+      <label>Meter <select id="a-meter"><option>MTR-001 (Galle Rd)</option><option>MTR-002 (Fort)</option><option>MTR-003 (Harbour)</option></select></label>
+      <label>Payload <input id="a-payload" value="kwh=42.7;volt=229"></label>
+      <fieldset><legend>Layers (applied in fixed order)</legend>
+        <label class="inline"><input type="checkbox" id="a-auth" checked> Authentication</label>
+        <label class="inline"><input type="checkbox" id="a-comp" checked> Compression</label>
+        <label class="inline"><input type="checkbox" id="a-enc" checked> Encryption</label>
+      </fieldset>
+      <button id="a-send">Send reading</button>
+    </div>
+    <div class="card">
+      <h3>Pipeline result</h3>
+      <table id="a-steps"><thead><tr><th>Layer</th><th>Output</th><th>Bytes</th></tr></thead><tbody></tbody></table>
+      <h4>Recent transmissions</h4>
+      <ul id="a-log" class="plain"></ul>
+    </div>
+  </div>
+  <details><summary>Data requirements</summary>
+    <p><b>Entities:</b> Meter (id, location), StreamConfig (meterId, layers[]), Transmission (meterId, layers, payload, resultBytes, time).</p>
+    <p><b>Possible calls:</b> GET meters · GET/PUT meters/{id}/stream-config · POST meters/{id}/readings · GET meters/{id}/transmissions</p>
+  </details>
+</section>
+
+<!-- B -->
+<section class="view" id="b">
+  <h1>City Zones <span class="tag">Composite</span></h1>
+  <div class="cols">
+    <div class="card"><h3>City hierarchy</h3><div id="b-tree" class="tree"></div></div>
+    <div class="card">
+      <h3>Command panel</h3>
+      <p>Selected: <b id="b-sel">none</b> <span id="b-type" class="tag"></span></p>
+      <div class="row">
+        <button id="b-off">Shutdown power</button>
+        <button id="b-on" class="alt">Restore power</button>
+        <button id="b-rep" class="alt">Report usage</button>
+      </div>
+      <div id="b-result" class="result">Select a node and run a command.</div>
+    </div>
+  </div>
+  <details><summary>Data requirements</summary>
+    <p><b>Entities:</b> ZoneNode (id, name, type: city|district|street|building, parentId, powerOn, kwhUsage for buildings).</p>
+    <p><b>Possible calls:</b> GET zones/tree · POST zones/{id}/commands/shutdown · POST zones/{id}/commands/restore · GET zones/{id}/usage</p>
+  </details>
+</section>
+
+<!-- C -->
+<section class="view" id="c">
+  <h1>Complaints <span class="tag">Chain of Responsibility</span></h1>
+  <div class="cols">
+    <div class="card">
+      <h3>Submit complaint</h3>
+      <label>Category <select id="c-cat"><option>Noise</option><option>Waste</option><option>Road damage</option><option>Street light</option></select></label>
+      <label>Severity <select id="c-sev"><option value="1">Low</option><option value="2">Medium</option><option value="3">High</option><option value="4">Critical</option></select></label>
+      <label>Description <textarea id="c-desc" rows="3">Details of the issue…</textarea></label>
+      <button id="c-submit">Submit</button>
+      <fieldset><legend>Escalation chain</legend>
+        <label class="inline"><input type="checkbox" checked disabled> Local staff (Low)</label>
+        <label class="inline"><input type="checkbox" id="c-sup" checked> Supervisor (Medium)</label>
+        <label class="inline"><input type="checkbox" checked disabled> City manager (High / Critical)</label>
+      </fieldset>
+    </div>
+    <div class="card"><h3>Complaints</h3>
+      <table id="c-table"><thead><tr><th>#</th><th>Category</th><th>Severity</th><th>Resolved by</th></tr></thead><tbody></tbody></table>
+      <h4>Escalation trace <span id="c-sel"></span></h4>
+      <ol id="c-trace" class="plain"><li>Click a row to see its trace.</li></ol>
+    </div>
+  </div>
+  <details><summary>Data requirements</summary>
+    <p><b>Entities:</b> Complaint (id, category, description, severity, status, resolvedBy, createdAt), TraceEntry (complaintId, handler, action, time), ChainConfig (handlers[], order).</p>
+    <p><b>Possible calls:</b> POST complaints · GET complaints · GET complaints/{id}/trace · GET/PUT escalation-chain</p>
+  </details>
+</section>
+
+<!-- D -->
+<section class="view" id="d">
+  <h1>Street Lights <span class="tag">Flyweight</span></h1>
+  <div class="cols">
+    <div class="card">
+      <h3>Register lights</h3>
+      <label>Number of lights <input type="number" id="d-n" value="20000" min="1" max="200000"></label>
+      <button id="d-gen">Generate lights</button>
+      <div class="stats" id="d-stats"></div>
+    </div>
+    <div class="card">
+      <h3>Shared light types (intrinsic)</h3>
+      <table id="d-types"><thead><tr><th>Type key</th><th>Model</th><th>Watts</th><th>Profile</th><th>Used by</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div>
+  <div class="card"><h3>Lights (extrinsic: id, location) – first 10</h3>
+    <table id="d-lights"><thead><tr><th>ID</th><th>Latitude</th><th>Longitude</th><th>Type</th></tr></thead><tbody></tbody></table>
+  </div>
+  <details><summary>Data requirements</summary>
+    <p><b>Entities:</b> LightType (key, model, wattage, dimmingProfile), StreetLight (id, lat, lng, typeKey, status). Memory figures are computed from counts (assumed 1,064 B vs 48 B per light + shared types).</p>
+    <p><b>Possible calls:</b> GET light-types · GET lights?page= · POST lights/bulk · GET lights/stats</p>
+  </details>
+</section>
+
+<!-- E -->
+<section class="view" id="e">
+  <h1>City Policies <span class="tag">Interpreter</span></h1>
+  <div class="cols">
+    <div class="card">
+      <h3>Rule editor</h3>
+      <label>Saved rules <select id="e-saved"></select></label>
+      <label>Rule (DSL) <textarea id="e-rule" rows="3"></textarea></label>
+      <p class="hint">Variables: noise_level, hour, parked_minutes · Operators: &gt; &lt; == AND OR NOT ( )</p>
+      <div class="row">
+        <label>noise_level <input type="number" id="e-noise" value="82"></label>
+        <label>hour <input type="number" id="e-hour" value="23"></label>
+        <label>parked_minutes <input type="number" id="e-park" value="90"></label>
+      </div>
+      <button id="e-run">Evaluate</button>
+    </div>
+    <div class="card">
+      <h3>Result</h3>
+      <div id="e-result" class="result">Run a rule to see the outcome.</div>
+      <h4>Expression tree</h4>
+      <pre id="e-tree"></pre>
+    </div>
+  </div>
+  <details><summary>Data requirements</summary>
+    <p><b>Entities:</b> PolicyRule (id, name, dsl, active, version), EvaluationRequest (ruleId or dsl, context map), EvaluationResult (outcome, tree, error).</p>
+    <p><b>Possible calls:</b> GET/POST/PUT policies · POST policies/evaluate · GET city-variables</p>
+  </details>
+</section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
